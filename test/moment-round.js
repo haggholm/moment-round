@@ -1,3 +1,4 @@
+require('babel-register');
 var moment = require('moment');
 var assert = require('assert');
 var assert = require('should');
@@ -209,7 +210,7 @@ describe('Moment', function() {
       m = m.ceil(8, 'Hours');
       m.format('YYYY-MM-DD HH:mm:ss').should.equal('2015-05-06 00:00:00');
     });
-    
+
   });
 
   describe('#floor()', function() {
@@ -304,7 +305,7 @@ describe('Moment', function() {
       m = m.floor(8, 'Hours');
       m.format('YYYY-MM-DD HH:mm:ss').should.equal('2015-05-05 08:00:00');
     });
-    
+
   });
 
 });

@@ -1,78 +1,86 @@
-(function() {
+import moment from 'moment';
 
-  var moment = ( typeof require !== "undefined" && require !== null ) && !require.amd ? require( "moment" ) : this.moment;
+export function round(precision, rawKey, direction = 'round') {
+	const methods = {
+		hours: {
+			name: 'Hours',
+			maxValue: 24,
+		},
+		minutes: {
+			name: 'Minutes',
+			maxValue: 60,
+		},
+		seconds: {
+			name: 'Seconds',
+			maxValue: 60,
+		},
+		milliseconds: {
+			name: 'Milliseconds',
+			maxValue: 1000,
+		},
+	};
 
-  moment.fn.round = function( precision, key, direction ) {
-    direction = direction || 'round';
-    var _this = this; //cache of this
-    var methods = {
-      hours:        { 'name': 'Hours',        'maxValue': 24},
-      minutes:      { 'name': 'Minutes',      'maxValue': 60 },
-      seconds:      { 'name': 'Seconds',      'maxValue': 60 },
-      milliseconds: { 'name': 'Milliseconds', 'maxValue': 1000 }
-    };
-    var keys = {
-      'mm':           methods.milliseconds.name,
-      'milliseconds': methods.milliseconds.name,
-      'Milliseconds': methods.milliseconds.name,
-      's':            methods.seconds.name,
-      'seconds':      methods.seconds.name,
-      'Seconds':      methods.seconds.name,
-      'm':            methods.minutes.name,
-      'minutes':      methods.minutes.name,
-      'Minutes':      methods.minutes.name,
-      'H':            methods.hours.name,
-      'h':            methods.hours.name,
-      'hours':        methods.hours.name,
-      'Hours':        methods.hours.name
-    };
-    var value = 0;
-    var rounded = false;
-    var subRatio = 1;
-    var maxValue ;
-    
-    // make sure key is plural
-    if ( key.length > 1 && key !== 'mm' && key.slice( -1 ) !== 's' ) {
-      key += 's';
-    }
-    key = keys[ key ].toLowerCase();
+	const keys = {
+		mm: methods.milliseconds.name,
+		milliseconds: methods.milliseconds.name,
+		Milliseconds: methods.milliseconds.name,
+		s: methods.seconds.name,
+		seconds: methods.seconds.name,
+		Seconds: methods.seconds.name,
+		m: methods.minutes.name,
+		minutes: methods.minutes.name,
+		Minutes: methods.minutes.name,
+		H: methods.hours.name,
+		h: methods.hours.name,
+		hours: methods.hours.name,
+		Hours: methods.hours.name,
+	};
 
-    //control
-    if( !methods[ key ] ){
-      throw new Error( 'The value to round is not valid. Possibles ["hours", "minutes", "seconds", "milliseconds"]' );
-    }
+	let maxValue;
+	let value = 0;
+	let rounded = false;
+	let subRatio = 1;
 
-    var get = 'get' + methods[ key ].name;
-    var set = 'set' + methods[ key ].name;
+	const needsPluralized = (k) => k.length > 1 && k !== 'mm' && k.slice(-1) !== 's';
+	const key = keys[needsPluralized(rawKey) ? `${rawKey}s` : rawKey].toLowerCase();
 
-    for( var k in methods ){
-      if ( k === key ) {
-        value = _this._d[ get ]();
-        maxValue = methods[ k ].maxValue;
-        rounded = true;
-      } else if( rounded ) {
-        subRatio *= methods[ k ].maxValue;
-        value += _this._d[ 'get' + methods[ k ].name ]() / subRatio;
-        _this._d[ 'set' + methods[ k ].name ](0);
-      }
-    }
+	if (!methods[key]) {
+		throw new Error(`Invalid method ${key}. Try one of: ${Object.keys(methods).join()}`);
+	}
 
-    value = Math[ direction ]( value / precision ) * precision;
-    value = Math.min( value, maxValue );
-    _this._d[ set ]( value );
+	const get = `get${methods[key].name}`;
+	const set = `set${methods[key].name}`;
 
-    return _this;
-  }
+	Object.keys(methods).forEach((k) => {
+		if (k === key) {
+			value = this._d[get]();
+			maxValue = methods[k].maxValue;
+			rounded = true;
+		} else if (rounded) {
+			subRatio *= methods[k].maxValue;
+			value += this._d[`get${methods[k].name}`]() / subRatio;
+			this._d[`set${methods[k].name}`](0);
+		}
+	});
 
-  moment.fn.ceil = function( precision, key ) {
-    return this.round( precision, key, 'ceil' );
-  }
+	value = Math[direction](value / precision) * precision;
+	value = Math.min(value, maxValue);
+	this._d[set](value);
 
-  moment.fn.floor = function( precision, key ) {
-    return this.round( precision, key, 'floor' );
-  }
+	return this;
+}
 
-  if ( ( typeof module !== "undefined" && module !== null ? module.exports : void 0 ) != null ) {
-    module.exports = moment;
-  }
-}).call( this );
+export function ceil(precision, key) {
+	return this.round(precision, key, 'ceil');
+}
+
+export function floor(precision, key) {
+	return this.round(precision, key, 'floor');
+}
+
+moment.fn.round = round;
+moment.fn.ceil = ceil;
+moment.fn.floor = floor;
+
+export default moment;
+
