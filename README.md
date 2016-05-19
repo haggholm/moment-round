@@ -1,6 +1,12 @@
 # moment-round
+[![Travis-CI Build Status](https://travis-ci.org/SpotOnInc/moment-round.svg)](https://travis-ci.org/SpotOnInc/moment-round)
 
-This is a plugin for [moment.js][moment] and will round date/time to a given interval.
+This is a plugin for [moment.js][moment] and will round date/time to a given
+interval.
+
+This fork by SpotOn only supports CommonJS by default, which will work with
+Node and with Webpack. If you need other loaders, you'll need to change our
+Babel setup to whatever you need.
 
 ## Examples
 
