@@ -3,7 +3,7 @@ var moment = require('moment');
 var assert = require('assert');
 var assert = require('should');
 
-require('../src/moment-round');
+require('../src/moment-round').monkey(moment);
 
 describe('Moment', function() {
 

@@ -6,17 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.round = round;
 exports.ceil = ceil;
 exports.floor = floor;
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+exports.monkey = monkey;
 function round(precision, rawKey) {
 	var _this = this;
 
-	var direction = arguments.length <= 2 || arguments[2] === undefined ? 'round' : arguments[2];
+	var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'round';
 
 	var methods = {
 		hours: {
@@ -97,8 +91,10 @@ function floor(precision, key) {
 	return this.round(precision, key, 'floor');
 }
 
-_moment2.default.fn.round = round;
-_moment2.default.fn.ceil = ceil;
-_moment2.default.fn.floor = floor;
+function monkey(moment) {
+	moment.fn.round = round;
+	moment.fn.ceil = ceil;
+	moment.fn.floor = floor;
 
-exports.default = _moment2.default;
+	return moment;
+}

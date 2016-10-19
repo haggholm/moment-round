@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 export function round(precision, rawKey, direction = 'round') {
 	const methods = {
 		hours: {
@@ -78,9 +76,10 @@ export function floor(precision, key) {
 	return this.round(precision, key, 'floor');
 }
 
-moment.fn.round = round;
-moment.fn.ceil = ceil;
-moment.fn.floor = floor;
+export function monkey(moment) {
+	moment.fn.round = round;
+	moment.fn.ceil = ceil;
+	moment.fn.floor = floor;
 
-export default moment;
-
+	return moment;
+}
