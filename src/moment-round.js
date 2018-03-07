@@ -1,5 +1,9 @@
 export function round(precision, rawKey, direction = 'round') {
 	const methods = {
+		days: {
+			name: 'Days',
+			maxValue: 31,
+		},
 		hours: {
 			name: 'Hours',
 			maxValue: 24,
@@ -32,6 +36,9 @@ export function round(precision, rawKey, direction = 'round') {
 		h: methods.hours.name,
 		hours: methods.hours.name,
 		Hours: methods.hours.name,
+		days: methods.days.name,
+		Days: methods.days.name,
+		D: methods.days.name,
 	};
 
 	let maxValue;
